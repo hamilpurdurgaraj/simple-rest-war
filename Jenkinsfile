@@ -16,7 +16,7 @@ pipeline {
         stage('SonarQube Analysis') {
             environment {
                 scannerHome = tool 'sonarqube-scanner'
-
+            }
 
             steps {
                 withSonarQubeEnv('sonarqube-connect') {
@@ -24,7 +24,5 @@ pipeline {
                 }
             }
         }
-
     }
 }
-
