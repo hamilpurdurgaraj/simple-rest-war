@@ -1,18 +1,30 @@
 pipeline {
     agent any
+
     environment {
-        PATH = "/opt/maven/bin:$PATH"
+        PATH = "/opt/maven/bin:${env.PATH}"
     }
+
     stages {
-        stage ('git clone') {
+
+        stage('Build') {
             steps {
-                git url: 'https://github.com/hamilpurdurgaraj/simple-rest-war.git' , branch: 'master'
+                sh 'mvn clean deploy'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            environment {
+                scannerHome = tool 'sonarqube-scanner'
+
+
+            steps {
+                withSonarQubeEnv('sonarqube-connect') {
+                    sh "${scannerHome}/bin/sonar-scanner"
                 }
+            }
         }
-        stage ('build') {
-            steps {
-                sh 'mvn clean package'
-             }
-        }
+
     }
 }
+
